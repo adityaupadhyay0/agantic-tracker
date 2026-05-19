@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import telemetry, bcos, mcp, graphql
+from app.api import telemetry, bcos, mcp, graphql, predictions, marketplace
 from app.db.base import engine, Base
 
 app = FastAPI(title="CORTEX — Behavioral Context Enrichment Agent", version="1.0")
@@ -29,4 +29,6 @@ async def startup():
 app.include_router(telemetry.router)
 app.include_router(bcos.router)
 app.include_router(mcp.router)
+app.include_router(predictions.router)
+app.include_router(marketplace.router)
 app.include_router(graphql.router, prefix="/graphql")

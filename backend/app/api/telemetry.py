@@ -4,6 +4,7 @@ from app.db.base import get_db
 from app.schemas.telemetry import TelemetryEvent, BehavioralState
 from app.models.telemetry import Telemetry as TelemetryModel
 from app.services.interpretation.engine import InterpretationEngine
+from app.services.compression.engine import CompressionEngine
 from typing import List
 
 router = APIRouter(prefix="/telemetry", tags=["telemetry"])
@@ -26,6 +27,17 @@ async def ingest_telemetry(event: TelemetryEvent, db: AsyncSession = Depends(get
     await engine.process_event(event)
 
     return {"status": "success", "event_id": event.event_id}
+
+@router.post("/compress")
+async def compress_telemetry(user_id: str, db: AsyncSession = Depends(get_db)):
+    """
+    Manually trigger compression. In production, this would be a background task.
+    """
+    engine = CompressionEngine(db)
+    await engine.compress_individual_patterns(user_id)
+    await engine.compress_team_patterns("engineering_team_a")
+    await engine.compress_org_patterns()
+    return {"status": "compression complete"}
 
 @router.get("/sessions/{user_id}", response_model=List[BehavioralState])
 async def get_user_sessions(user_id: str, db: AsyncSession = Depends(get_db)):

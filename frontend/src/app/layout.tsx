@@ -10,6 +10,9 @@ export default function RootLayout({ children }) {
             <h1 className="text-xl font-bold tracking-tight text-indigo-400">CORTEX</h1>
             <div className="space-x-6 text-sm font-medium">
               <a href="/" className="hover:text-indigo-400">Dashboard</a>
+              <a href="/marketplace" className="hover:text-indigo-400">Marketplace</a>
+              <a href="/trends" className="hover:text-indigo-400">Trends</a>
+              <a href="/forecast" className="hover:text-indigo-400">Forecast</a>
               <a href="/transparency" className="hover:text-indigo-400">Transparency</a>
               <a href="/onboarding" className="hover:text-indigo-400">Setup</a>
             </div>

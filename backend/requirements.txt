@@ -13,3 +13,4 @@ pytest-asyncio
 python-jose[cryptography]
 passlib[bcrypt]
 strawberry-graphql[fastapi]
+aiosqlite

@@ -30,6 +30,26 @@ class CortexClient:
             response.raise_for_status()
             return response.json()
 
+    async def get_predictions(self):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{self.api_url}/predictions/")
+            response.raise_for_status()
+            return response.json()
+
+    async def contribute_context(self, label: str, observations: List[str], confidence: float = 0.7):
+        """Allows third-party apps/agents to contribute semantic context back to CORTEX."""
+        async with httpx.AsyncClient() as client:
+            payload = {
+                "label": label,
+                "observations": observations,
+                "confidence": confidence,
+                "agent_id": "sdk_client"
+            }
+            # Using the MCP endpoint logic under the hood
+            response = await client.post(f"{self.api_url}/mcp/tools/share_agent_context", json=payload)
+            response.raise_for_status()
+            return response.json()
+
 # LangChain Integration Example
 class CortexLangChainTool:
     def __init__(self, client: CortexClient):

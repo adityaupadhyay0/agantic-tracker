@@ -2,12 +2,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.telemetry import TelemetryEvent, WorkState, TelemetrySource
 from app.models.telemetry import BehavioralSession
 from app.services.compression.engine import CompressionEngine
+from app.services.interpretation.llm_interpreter import LLMInterpreter
 from datetime import datetime, timedelta
 import json
 
 class InterpretationEngine:
     def __init__(self, db: AsyncSession):
         self.db = db
+        self.llm = LLMInterpreter()
 
     async def process_event(self, event: TelemetryEvent):
         """
@@ -16,6 +18,12 @@ class InterpretationEngine:
         For MVP, we use rule-based logic with an LLM fallback.
         """
         state, confidence, evidence = self._rule_based_interpretation(event)
+
+        # Use LLM for low confidence interpretations
+        if confidence < 0.6:
+            llm_state, llm_conf, llm_evidence = await self.llm.interpret([event])
+            if llm_conf > confidence:
+                state, confidence, evidence = llm_state, llm_conf, llm_evidence
 
         # Check if there's an active session for this user
         # If the state matches, we might extend it. If it differs, we close the old one and start a new one.
@@ -32,15 +40,6 @@ class InterpretationEngine:
         )
         self.db.add(new_session)
         await self.db.commit()
-
-        # Trigger compression engine to update BCOs
-        compression_engine = CompressionEngine(self.db)
-        await compression_engine.compress_individual_patterns(event.user_id)
-
-        # Periodically or conditionally trigger team/org patterns
-        # For demonstration, we trigger them every time
-        await compression_engine.compress_team_patterns("engineering_team_a")
-        await compression_engine.compress_org_patterns()
 
     def _rule_based_interpretation(self, event: TelemetryEvent):
         if event.source == TelemetrySource.IDE:
