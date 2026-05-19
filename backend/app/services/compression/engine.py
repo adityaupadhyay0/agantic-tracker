@@ -4,6 +4,9 @@ from app.models.telemetry import BehavioralSession
 from app.models.bco import BCOModel
 from app.schemas.bco import BCOScope, BCOType, BCO
 from app.services.enrichment.vector_store import VectorStore
+from app.services.audit_service import AuditService
+from app.services.webhook_service import WebhookService
+from app.schemas.audit import AuditLogCreate
 from datetime import datetime, timedelta
 import json
 
@@ -15,6 +18,25 @@ class CompressionEngine:
     async def _save_bco(self, bco: BCOModel):
         self.db.add(bco)
         await self.db.commit()
+
+        # Trigger Webhooks
+        webhook_service = WebhookService(self.db)
+        await webhook_service.trigger("BCO_CREATED", {
+            "bco_id": bco.id,
+            "scope": bco.scope.value,
+            "type": bco.type.value,
+            "label": bco.label
+        })
+
+        # Audit Log
+        audit = AuditService(self.db)
+        await audit.log(AuditLogCreate(
+            action="BCO_CREATED",
+            actor_id="CORTEX_ENGINE",
+            resource_id=bco.id,
+            scope=bco.scope.value,
+            details={"type": bco.type.value, "label": bco.label}
+        ))
 
         # Add to vector store
         bco_schema = BCO(

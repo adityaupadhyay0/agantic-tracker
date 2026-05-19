@@ -6,6 +6,8 @@ from app.schemas.bco import BCO, BCOScope, BCOType
 from app.models.bco import BCOModel
 from app.core.auth import get_current_user, check_scope_access, UserContext
 from app.services.enrichment.vector_store import VectorStore
+from app.services.audit_service import AuditService
+from app.schemas.audit import AuditLogCreate
 from typing import List, Optional
 
 router = APIRouter(prefix="/bcos", tags=["bcos"])
@@ -75,11 +77,25 @@ async def search_bcos(
     ]
 
 @router.get("/{bco_id}", response_model=BCO)
-async def get_bco(bco_id: str, db: AsyncSession = Depends(get_db)):
+async def get_bco(
+    bco_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: UserContext = Depends(get_current_user)
+):
     result = await db.execute(select(BCOModel).where(BCOModel.id == bco_id))
     m = result.scalar_one_or_none()
     if not m:
         raise HTTPException(status_code=404, detail="BCO not found")
+
+    # Audit Log
+    audit = AuditService(db)
+    await audit.log(AuditLogCreate(
+        action="BCO_ACCESS",
+        actor_id=current_user.user_id,
+        resource_id=m.id,
+        scope=m.scope.value,
+        details={"label": m.label}
+    ))
 
     return BCO(
         bco_id=m.id,

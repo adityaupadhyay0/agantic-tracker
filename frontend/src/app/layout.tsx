@@ -14,6 +14,7 @@ export default function RootLayout({ children }) {
               <a href="/trends" className="hover:text-indigo-400">Trends</a>
               <a href="/forecast" className="hover:text-indigo-400">Forecast</a>
               <a href="/transparency" className="hover:text-indigo-400">Transparency</a>
+              <a href="/audit" className="hover:text-indigo-400">Compliance</a>
               <a href="/onboarding" className="hover:text-indigo-400">Setup</a>
             </div>
           </div>

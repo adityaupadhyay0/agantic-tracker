@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, desc
 from app.schemas.telemetry import TelemetryEvent, WorkState, TelemetrySource
 from app.models.telemetry import BehavioralSession
 from app.services.compression.engine import CompressionEngine
@@ -25,20 +26,34 @@ class InterpretationEngine:
             if llm_conf > confidence:
                 state, confidence, evidence = llm_state, llm_conf, llm_evidence
 
-        # Check if there's an active session for this user
-        # If the state matches, we might extend it. If it differs, we close the old one and start a new one.
-        # This is a simplified version of session segmentation.
-
-        new_session = BehavioralSession(
-            user_id=event.user_id,
-            state=state,
-            start_time=event.timestamp,
-            end_time=event.timestamp + timedelta(minutes=15), # Default block
-            confidence=confidence,
-            evidence=evidence,
-            metadata_json=event.metadata
+        # Session Segmentation Logic:
+        # Check if there's an active session for this user that hasn't expired
+        # "Active" means the state matches and the last event was recent.
+        result = await self.db.execute(
+            select(BehavioralSession)
+            .where(BehavioralSession.user_id == event.user_id)
+            .order_by(desc(BehavioralSession.end_time))
+            .limit(1)
         )
-        self.db.add(new_session)
+        last_session = result.scalar_one_or_none()
+
+        # If last session exists, matches state, and is within a 15min window of the new event
+        if last_session and last_session.state == state and (event.timestamp - last_session.end_time).total_seconds() < 900:
+            last_session.end_time = event.timestamp + timedelta(minutes=15)
+            # Update confidence/evidence if needed (e.g., rolling average)
+            last_session.confidence = (last_session.confidence + confidence) / 2
+        else:
+            new_session = BehavioralSession(
+                user_id=event.user_id,
+                state=state,
+                start_time=event.timestamp,
+                end_time=event.timestamp + timedelta(minutes=15), # Default block
+                confidence=confidence,
+                evidence=evidence,
+                metadata_json=event.metadata
+            )
+            self.db.add(new_session)
+
         await self.db.commit()
 
     def _rule_based_interpretation(self, event: TelemetryEvent):

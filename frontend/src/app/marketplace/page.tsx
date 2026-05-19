@@ -1,8 +1,20 @@
 "use client";
-import React from 'react';
-import { ShoppingBag, Star, Download, Filter } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ShoppingBag, Star, Download, Filter, RefreshCw } from 'lucide-react';
 
 export default function MarketplacePage() {
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/marketplace/')
+      .then(res => res.json())
+      .then(data => {
+          setTemplates(data);
+          setLoading(false);
+      });
+  }, []);
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-end">
@@ -18,32 +30,25 @@ export default function MarketplacePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TemplateCard
-            name="High-Growth Startup Rhythm"
-            description="Optimized for rapid iteration and high implementation velocity."
-            scope="Organization"
-            category="Rhythm"
-            stars={4.8}
-            downloads="1.2k"
-        />
-        <TemplateCard
-            name="Open Source Maintainer Dynamics"
-            description="Models the specific review and coordination patterns of OSS projects."
-            scope="Team"
-            category="Collaboration"
-            stars={4.9}
-            downloads="840"
-        />
-        <TemplateCard
-            name="Enterprise Platform Stability"
-            description="Focuses on debugging, review, and rigorous documentation patterns."
-            scope="Team"
-            category="Governance"
-            stars={4.7}
-            downloads="2.5k"
-        />
-      </div>
+      {loading ? (
+          <div className="h-64 flex items-center justify-center">
+              <RefreshCw className="animate-spin text-indigo-400" />
+          </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {templates.map((t, i) => (
+                <TemplateCard
+                    key={i}
+                    name={t.name}
+                    description={t.description}
+                    scope={t.scope}
+                    category={t.type}
+                    stars={4.7 + (i * 0.1)}
+                    downloads={`${1.2 + i}k`}
+                />
+            ))}
+        </div>
+      )}
     </div>
   );
 }

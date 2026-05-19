@@ -5,6 +5,8 @@ from app.schemas.telemetry import TelemetryEvent, BehavioralState
 from app.models.telemetry import Telemetry as TelemetryModel
 from app.services.interpretation.engine import InterpretationEngine
 from app.services.compression.engine import CompressionEngine
+from app.services.audit_service import AuditService
+from app.schemas.audit import AuditLogCreate
 from typing import List
 
 router = APIRouter(prefix="/telemetry", tags=["telemetry"])
@@ -25,6 +27,16 @@ async def ingest_telemetry(event: TelemetryEvent, db: AsyncSession = Depends(get
     # For now, we call it synchronously to demonstrate the flow
     engine = InterpretationEngine(db)
     await engine.process_event(event)
+
+    # Audit Log
+    audit = AuditService(db)
+    await audit.log(AuditLogCreate(
+        action="TELEMETRY_INGESTED",
+        actor_id=event.user_id,
+        resource_id=event.event_id,
+        scope="individual",
+        details={"source": event.source, "type": event.event_type}
+    ))
 
     return {"status": "success", "event_id": event.event_id}
 

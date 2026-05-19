@@ -5,9 +5,20 @@ from app.schemas.bco import BCO
 from typing import List
 
 class VectorStore:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(VectorStore, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
     def __init__(self):
+        if self._initialized:
+            return
+
         # In a real local deployment, this would persist to disk
-        self.client = chromadb.Client()
+        self.client = chromadb.PersistentClient(path="./chroma_db")
         self.openai_ef = None
         if os.getenv("OPENAI_API_KEY"):
             self.openai_ef = embedding_functions.OpenAIEmbeddingFunction(
@@ -19,6 +30,7 @@ class VectorStore:
             name="cortex_bcos",
             embedding_function=self.openai_ef
         )
+        self._initialized = True
 
     def add_bco(self, bco: BCO):
         content = f"{bco.label} {bco.type} {' '.join(bco.evidence)}"
