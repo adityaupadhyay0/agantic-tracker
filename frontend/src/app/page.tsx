@@ -1,8 +1,11 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Activity, Brain, Shield, Zap } from 'lucide-react';
+import React from 'react';
+import { Activity, Brain, Shield, Zap, Loader2 } from 'lucide-react';
+import { useCortexBCOs } from '../hooks/useCortex';
 
 export default function Dashboard() {
+  const { bcos, loading } = useCortexBCOs();
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-end">
@@ -16,9 +19,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard icon={<Activity className="text-blue-400" />} label="Active Signals" value="1,248" />
-        <StatCard icon={<Brain className="text-purple-400" />} label="BCOs Generated" value="42" />
-        <StatCard icon={<Zap className="text-amber-400" />} label="Context Hits" value="8.4k" />
+        <StatCard icon={<Activity className="text-blue-400" />} label="Active Signals" value="--" />
+        <StatCard icon={<Brain className="text-purple-400" />} label="BCOs Generated" value={bcos.length} />
+        <StatCard icon={<Zap className="text-amber-400" />} label="Context Hits" value="--" />
         <StatCard icon={<Shield className="text-emerald-400" />} label="Privacy Audits" value="100%" />
       </div>
 
@@ -26,9 +29,18 @@ export default function Dashboard() {
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
           <h3 className="text-lg font-semibold mb-4">Recent Behavioral Context Objects</h3>
           <div className="space-y-4">
-            <BCOItem label="Deep Focus Pattern" type="Rhythm" confidence={0.92} />
-            <BCOItem label="Frontend Expertise" type="Expertise" confidence={0.88} />
-            <BCOItem label="PR Bottleneck Detected" type="Bottleneck" confidence={0.75} />
+            {loading ? (
+               <div className="flex items-center space-x-2 text-slate-500">
+                 <Loader2 className="animate-spin" size={16} />
+                 <span>Loading BCOs...</span>
+               </div>
+            ) : bcos.length === 0 ? (
+               <div className="text-slate-500 text-sm">No context objects generated yet.</div>
+            ) : (
+              bcos.map((bco: any) => (
+                <BCOItem key={bco.bco_id} label={bco.label} type={bco.type} confidence={bco.confidence} />
+              ))
+            )}
           </div>
         </div>
 

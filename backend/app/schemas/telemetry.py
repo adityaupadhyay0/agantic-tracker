@@ -10,6 +10,8 @@ class TelemetrySource(str, Enum):
     AGENT = "agent"
     CALENDAR = "calendar"
     TICKET = "ticket"
+    DESIGN = "design"
+    DOCUMENT = "document"
 
 class TelemetryEvent(BaseModel):
     event_id: str
@@ -29,6 +31,9 @@ class WorkState(str, Enum):
     PLANNING = "planning"
     LEARNING = "learning"
     IDLE = "idle"
+    DESIGN_FOCUS = "design_focus"
+    OPS_COORDINATION = "ops_coordination"
+    MARKET_ANALYSIS = "market_analysis"
 
 class BehavioralState(BaseModel):
     user_id: str

@@ -7,3 +7,67 @@
  ✓ Compiled / in 5.5s (446 modules)
  ✓ Compiled in 770ms (230 modules)
  ✓ Compiled /transparency in 442ms (444 modules)
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ○ Compiling /not-found ...
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ⨯ ./src/app/page.tsx:4:0
+Module not found: Can't resolve '@/hooks/useCortex'
+[0m [90m 2 |[39m [36mimport[39m [33mReact[39m [36mfrom[39m [32m'react'[39m[33m;[39m[0m
+[0m [90m 3 |[39m [36mimport[39m { [33mActivity[39m[33m,[39m [33mBrain[39m[33m,[39m [33mShield[39m[33m,[39m [33mZap[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useCortexBCOs } [36mfrom[39m [32m'@/hooks/useCortex'[39m[33m;[39m[0m
+[0m [90m 5 |[39m[0m
+[0m [90m 6 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mDashboard[39m() {[0m
+[0m [90m 7 |[39m   [36mconst[39m { bcos[33m,[39m loading } [33m=[39m useCortexBCOs()[33m;[39m[0m
+
+https://nextjs.org/docs/messages/module-not-found
+ ✓ Compiled /_error in 2.1s (814 modules)
+ ○ Compiling /transparency ...
+ ✓ Compiled /transparency in 581ms (406 modules)

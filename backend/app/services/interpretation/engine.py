@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.telemetry import TelemetryEvent, WorkState, TelemetrySource
 from app.models.telemetry import BehavioralSession
+from app.services.compression.engine import CompressionEngine
 from datetime import datetime, timedelta
 import json
 
@@ -32,6 +33,15 @@ class InterpretationEngine:
         self.db.add(new_session)
         await self.db.commit()
 
+        # Trigger compression engine to update BCOs
+        compression_engine = CompressionEngine(self.db)
+        await compression_engine.compress_individual_patterns(event.user_id)
+
+        # Periodically or conditionally trigger team/org patterns
+        # For demonstration, we trigger them every time
+        await compression_engine.compress_team_patterns("engineering_team_a")
+        await compression_engine.compress_org_patterns()
+
     def _rule_based_interpretation(self, event: TelemetryEvent):
         if event.source == TelemetrySource.IDE:
             if event.event_type in ["file_edit", "save"]:
@@ -45,5 +55,11 @@ class InterpretationEngine:
 
         if event.source == TelemetrySource.COMMUNICATION:
             return WorkState.COORDINATION, 0.7, ["Communication metadata activity"]
+
+        if event.source == TelemetrySource.DESIGN:
+            return WorkState.DESIGN_FOCUS, 0.85, ["Design tool activity detected (e.g. Figma)"]
+
+        if event.source == TelemetrySource.CALENDAR:
+            return WorkState.COORDINATION, 0.9, ["Meeting metadata from Calendar"]
 
         return WorkState.RESEARCH, 0.5, ["Defaulting to research for unclassified activity"]

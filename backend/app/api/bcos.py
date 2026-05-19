@@ -4,6 +4,7 @@ from sqlalchemy import select
 from app.db.base import get_db
 from app.schemas.bco import BCO, BCOScope, BCOType
 from app.models.bco import BCOModel
+from app.core.auth import get_current_user, check_scope_access, UserContext
 from typing import List, Optional
 
 router = APIRouter(prefix="/bcos", tags=["bcos"])
@@ -13,8 +14,12 @@ async def list_bcos(
     scope: Optional[BCOScope] = None,
     scope_id: Optional[str] = None,
     type: Optional[BCOType] = None,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    current_user: UserContext = Depends(get_current_user)
 ):
+    if scope:
+        check_scope_access(current_user, scope.value, scope_id)
+
     query = select(BCOModel)
     if scope:
         query = query.where(BCOModel.scope == scope)
