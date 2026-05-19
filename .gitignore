@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+.npm
+yarn-error.log
+
+# Databases
+*.sqlite3
+postgres-data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.docker/
